@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-module.exports = { app };
+module.exports = app;
 
 // Add middleware for handling CORS requests from index.html
 app.use(cors());
