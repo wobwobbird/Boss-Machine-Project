@@ -1,6 +1,7 @@
 const express = require('express');
 const apiRouter = express.Router();
-const { getAllFromDatabase, getFromDatabaseById, addToDatabase, updateInstanceInDatabase, deleteFromDatabasebyId } = require('./db.js'); 
+const { getAllFromDatabase, getFromDatabaseById, addToDatabase, updateInstanceInDatabase, deleteFromDatabasebyId, deleteAllFromDatabase, createMeeting } = require('./db.js'); 
+const checkMillionDollarIdea = require('./checkMillionDollarIdea.js');
 
 apiRouter.param('minionId', (req, res, next, minionId) => {
     const object = getFromDatabaseById('minions', minionId);
@@ -50,7 +51,7 @@ apiRouter.delete('/minions/:minionId', (req, res, next) => {
 
 
 
-
+// apiRouter.use('/ideas', checkMillionDollarIdea);
 
 apiRouter.param('ideaId', (req, res, next, ideaId) => {
     const object = getFromDatabaseById('ideas', ideaId);
@@ -68,7 +69,7 @@ apiRouter.get('/ideas', (req, res, next) => {
     res.status(200).send(ideasArray || []);
 });
 
-apiRouter.post('/ideas', (req, res, next) => {
+apiRouter.post('/ideas',checkMillionDollarIdea, (req, res, next) => {
     const updatedDatabase = addToDatabase('ideas', req.body);
     if (updatedDatabase) {
         res.status(201).send(updatedDatabase);
@@ -81,7 +82,7 @@ apiRouter.get('/ideas/:ideaId', (req, res, next) => {
     res.send(req.ideaObject);
 });
 
-apiRouter.put('/ideas/:ideaId', (req, res, next) => {
+apiRouter.put('/ideas/:ideaId', checkMillionDollarIdea, (req, res, next) => {
     const updatedIdeas = updateInstanceInDatabase('ideas', req.body);
     if (updatedIdeas) {
         res.send(updatedIdeas);
@@ -97,6 +98,31 @@ apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
     }
 });
 
+
+
+
+
+
+
+apiRouter.get('/meetings', (req, res, next) => {
+    const meetingsArray = getAllFromDatabase("meetings");
+    res.send(meetingsArray);
+});
+
+apiRouter.post('/meetings', (req, res, next) => {
+    const newMeeting = createMeeting();
+    const updatedDatabase = addToDatabase('meetings', newMeeting); 
+    if (updatedDatabase) {
+        res.status(201).send(updatedDatabase);
+    } else {
+        res.status(400).send();
+    }
+});
+
+apiRouter.delete('/meetings', (req, res, next) => {
+    const emptyArray = deleteAllFromDatabase('meetings');
+    res.status(204).send(emptyArray);
+});
 
 
 
