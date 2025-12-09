@@ -6,7 +6,7 @@ apiRouter.param('minionId', (req, res, next, minionId) => {
     const object = getFromDatabaseById('minions', minionId);
     if (object) {
         req.minionId = minionId;
-        req.idObject = object;
+        req.minionObject = object;
         return next();
     } else {
         return res.status(404).send({});
@@ -28,7 +28,7 @@ apiRouter.post('/minions', (req, res, next) => {
 });
 
 apiRouter.get('/minions/:minionId', (req, res, next) => {
-    res.send(req.idObject);
+    res.send(req.minionObject);
 });
 
 apiRouter.put('/minions/:minionId', (req, res, next) => {
@@ -56,7 +56,7 @@ apiRouter.param('ideaId', (req, res, next, ideaId) => {
     const object = getFromDatabaseById('ideas', ideaId);
     if (object) {
         req.ideaId = ideaId;
-        req.idObject = object;
+        req.ideaObject = object;
         return next();
     } else {
         return res.status(404).send({});
@@ -65,7 +65,7 @@ apiRouter.param('ideaId', (req, res, next, ideaId) => {
 
 apiRouter.get('/ideas', (req, res, next) => {
     const ideasArray = getAllFromDatabase('ideas');
-    res.status(200).status(ideasArray || []);
+    res.status(200).send(ideasArray || []);
 });
 
 apiRouter.post('/ideas', (req, res, next) => {
@@ -78,7 +78,7 @@ apiRouter.post('/ideas', (req, res, next) => {
 });
 
 apiRouter.get('/ideas/:ideaId', (req, res, next) => {
-    res.send(req.idObject);
+    res.send(req.ideaObject);
 });
 
 apiRouter.put('/ideas/:ideaId', (req, res, next) => {
